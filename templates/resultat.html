@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Résultat de l'extraction</title>
+</head>
+<body>
+    <h1>Résultat de l'extraction</h1>
+    <p><strong>Date :</strong> {{ donnees.date or "Non trouvée" }}</p>
+    <p><strong>Expéditeur :</strong> {{ donnees.expediteur }}</p>
+    <p><strong>Destinataire :</strong> {{ donnees.destinataire }}</p>
+    <p><strong>Objet :</strong> {{ donnees.objet }}</p>
+    <p><strong>Type de courrier :</strong> {{ donnees.type_courrier }}</p>
+    <p><strong>Résumé :</strong> {{ donnees.resume }}</p>
+
+    <p><strong>Mots-clés :</strong></p>
+    <ul>
+    {% for mot in donnees.mots_cles_recherche %}
+        <li>{{ mot }}</li>
+    {% endfor %}
+    </ul>
+
+    <hr>
+    <h3>Texte brut extrait</h3>
+    <pre>{{ texte }}</pre>
+
+    <a href="/">Analyser un autre document</a>
+</body>
+</html>
