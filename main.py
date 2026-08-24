@@ -1,85 +1,48 @@
-# main.py
-# Point d'entrée : détecte le type de fichier, extrait le texte, structure via Claude, affiche en HTML
-import cgi
 import os
-from http.server import HTTPServer, BaseHTTPRequestHandler
-from urllib.parse import urlparse, parse_qs
+from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.responses import HTMLResponse
 
 from extracteur_image import extraire_texte_image
 from extracteur_pdf import extraire_texte_pdf
-from extracteur_claude import extraire_donnees  
-
-from vue_html import generer_page_resultat, generer_page_accueil
+from extracteur_claude import extraire_donnees
+from vue_html import generer_page_accueil, generer_page_resultat
 
 DOSSIER_UPLOADS = "uploads"
-os.makedirs(DOSSIER_UPLOADS, exist_ok=True)  # Dossier où les fichiers sont stockés
+os.makedirs(DOSSIER_UPLOADS, exist_ok=True)
 
-def extraire_texte_selon_type(chemin_fichier):
-        """Détecte l'extension et appelle le bon extracteur."""
-        extension = os.path.splitext(chemin_fichier)[1].lower()
+app = FastAPI()
 
-        if extension in [".png", ".jpg", ".jpeg"]:
-            return extraire_texte_image(chemin_fichier)
-        elif extension == ".pdf":
-            return extraire_texte_pdf(chemin_fichier)
-        else:
-            raise ValueError(f"Type de fichier non supporté : {extension}")
+def Extraire_texte_selon_type(chemin_fichier):
+    """Extrait le texte d'un fichier selon son type."""
+    extension = os.path.splitext(chemin_fichier)[1].lower()
+    if extension in [".png", ".jpg", ".jpeg"]:
+        return extraire_texte_image(chemin_fichier)
+    elif extension == ".pdf":
+        return extraire_texte_pdf(chemin_fichier)
+    else:
+        raise ValueError("Type de fichier non supporté.")
 
-class MonServeur(BaseHTTPRequestHandler):
-    def do_GET(self):
-        url_parsee = urlparse(self.path)
-        params = parse_qs(url_parsee.query)
-        fichier = params.get("fichier", [None])[0]
+@app.get("/", response_class=HTMLResponse)
+def accueil():
+    """Page d'accueil avec le formulaire de téléchargement."""
+    return generer_page_accueil()
 
-        if fichier is None:
-            html = generer_page_accueil()
-        else:
-            try:
-                texte = extraire_texte_selon_type(fichier)
-                donnees = extraire_donnees(texte)
-                html = generer_page_resultat(donnees, texte)
-            except Exception as e:
-                html = f"<h1>Erreur</h1><p>{e}</p><a href='/'>Retour</a>"
+@app.post("/analyser", response_class=HTMLResponse)
+async def analyser(document: UploadFile = File(...)):
+    """Analyse le document téléchargé et retourne les résultats."""
+    chemin_sauvegarde = os.path.join(DOSSIER_UPLOADS, document.filename)
 
-        self.envoyer_html(html)
-
-    def do_POST(self):
-        url_parsee = urlparse(self.path)
-
-        if url_parsee.path == "/analyser":
-            # Parse le formulaire multipart (fichier envoyé)
-            form = cgi.FieldStorage(
-                fp=self.rfile,
-                headers=self.headers,
-                environ={"REQUEST_METHOD": "POST", "CONTENT_TYPE": self.headers["Content-Type"]}
-            )
-
-            fichier_upload = form["document"]
-
-            if not fichier_upload.filename:
-                html = "<h1>Erreur</h1><p>Aucun fichier sélectionné.</p><a href='/'>Retour</a>"
-            else:
-                # Sauvegarde le fichier reçu dans le dossier uploads/
-                chemin_sauvegarde = os.path.join(DOSSIER_UPLOADS, fichier_upload.filename)
-                with open(chemin_sauvegarde, "wb") as f:
-                    f.write(fichier_upload.file.read())
-
-                try:
-                    texte = extraire_texte_selon_type(chemin_sauvegarde)
-                    donnees = extraire_donnees(texte)
-                    html = generer_page_resultat(donnees, texte)
-                except Exception as e:
-                    html = f"<h1>Erreur</h1><p>{e}</p><a href='/'>Retour</a>"
-
-            self.envoyer_html(html)
-
-    def envoyer_html(self, html):
-        self.send_response(200)
-        self.send_header("Content-type", "text/html; charset=utf-8")
-        self.end_headers()
-        self.wfile.write(html.encode("utf-8"))
+    contenu = await document.read()
+    # Sauvegarde du fichier téléchargé
+    with open(chemin_sauvegarde, "wb") as f:
+        f.write(contenu)
+    
+    try:
+        texte = Extraire_texte_selon_type(chemin_sauvegarde)
+        donnees = extraire_donnees(texte)
+        return generer_page_resultat(donnees, texte)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
-serveur = HTTPServer(("localhost", 8000), MonServeur)
-print("Serveur lancé sur http://localhost:8000")
-serveur.serve_forever()
+    
