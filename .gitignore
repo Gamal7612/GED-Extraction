@@ -1,0 +1,15 @@
+# Environnement virtuel
+venv/
+
+# Fichiers Python compilés
+__pycache__/
+*.pyc
+
+# Clé API - ne jamais exposer publiquement
+.env
+
+# Configuration éditeur
+.vscode/
+
+# Fichiers uploadés par les utilisateurs (contenu temporaire/personnel)
+uploads/
