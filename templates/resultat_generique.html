@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block titre %}Résultat - Document{% endblock %}
+
+{% block contenu %}
+    <h2>Type détecté : Document non classifié</h2>
+    <p><strong>Titre :</strong> {{ donnees.titre }}</p>
+    <p><strong>Résumé :</strong> {{ donnees.resume }}</p>
+
+    <p><strong>Mots-clés :</strong></p>
+    <ul>
+    {% for mot in donnees.mots_cles_recherche %}
+        <li>{{ mot }}</li>
+    {% endfor %}
+    </ul>
+
+    <h3>Texte brut extrait</h3>
+    <pre>{{ texte }}</pre>
+{% endblock %}

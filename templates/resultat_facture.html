@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block titre %}Résultat - Facture{% endblock %}
+
+{% block contenu %}
+    <h2>Type détecté : Facture</h2>
+    <p><strong>Date :</strong> {{ donnees.date or "Non trouvée" }}</p>
+    <p><strong>Numéro de facture :</strong> {{ donnees.numero_facture }}</p>
+    <p><strong>Émetteur :</strong> {{ donnees.emetteur }}</p>
+    <p><strong>Destinataire :</strong> {{ donnees.destinataire }}</p>
+    <p><strong>Montant total :</strong> {{ donnees.montant_total }}</p>
+    <p><strong>TVA :</strong> {{ donnees.montant_tva or "Non précisée" }}</p>
+    <p><strong>Résumé :</strong> {{ donnees.resume }}</p>
+
+    <p><strong>Mots-clés :</strong></p>
+    <ul>
+    {% for mot in donnees.mots_cles_recherche %}
+        <li>{{ mot }}</li>
+    {% endfor %}
+    </ul>
+
+    <h3>Texte brut extrait</h3>
+    <pre>{{ texte }}</pre>
+{% endblock %}

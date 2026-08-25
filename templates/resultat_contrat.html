@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block titre %}Résultat - Contrat{% endblock %}
+
+{% block contenu %}
+    <h2>Type détecté : Contrat</h2>
+    <p><strong>Date :</strong> {{ donnees.date or "Non trouvée" }}</p>
+    <p><strong>Parties :</strong></p>
+    <ul>
+    {% for partie in donnees.parties %}
+        <li>{{ partie }}</li>
+    {% endfor %}
+    </ul>
+    <p><strong>Objet du contrat :</strong> {{ donnees.objet_contrat }}</p>
+    <p><strong>Durée :</strong> {{ donnees.duree or "Non précisée" }}</p>
+    <p><strong>Résumé :</strong> {{ donnees.resume }}</p>
+
+    <p><strong>Mots-clés :</strong></p>
+    <ul>
+    {% for mot in donnees.mots_cles_recherche %}
+        <li>{{ mot }}</li>
+    {% endfor %}
+    </ul>
+
+    <h3>Texte brut extrait</h3>
+    <pre>{{ texte }}</pre>
+{% endblock %}

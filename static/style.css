@@ -1,0 +1,135 @@
+/* Variables CSS - palette et valeurs réutilisables */
+:root {
+    /* Couleurs */
+    --couleur-primaire: #2c3e50;
+    --couleur-primaire-hover: #1a252f;
+    --couleur-fond: #f4f5f7;
+    --couleur-texte: #1a1a1a;
+    --couleur-bordure: #eee;
+    --couleur-bordure-input: #ddd;
+    --couleur-blanc: #ffffff;
+
+    /* Typographie */
+    --police-principale: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --taille-titre-header: 1.5rem;
+    --taille-texte-pre: 0.85rem;
+
+    /* Espacements */
+    --espacement-petit: 0.5rem;
+    --espacement-moyen: 1rem;
+    --espacement-grand: 1.5rem;
+    --espacement-tres-grand: 2rem;
+
+    /* Bordures et ombres */
+    --rayon-bordure: 4px;
+    --rayon-bordure-large: 8px;
+    --ombre-carte: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+    /* Largeur de contenu */
+    --largeur-max-contenu: 800px;
+}
+
+/* Styles généraux */
+body {
+    font-family: var(--police-principale);
+    margin: 0;
+    padding: 0;
+    background-color: var(--couleur-fond);
+    color: var(--couleur-texte);
+}
+
+/* Header */
+header {
+    background-color: var(--couleur-primaire);
+    color: var(--couleur-blanc);
+    padding: var(--espacement-grand) var(--espacement-tres-grand);
+}
+
+header h1 {
+    margin: 0;
+    font-size: var(--taille-titre-header);
+}
+
+/* Contenu principal */
+main {
+    max-width: var(--largeur-max-contenu);
+    margin: var(--espacement-tres-grand) auto;
+    padding: var(--espacement-tres-grand);
+    background-color: var(--couleur-blanc);
+    border-radius: var(--rayon-bordure-large);
+    box-shadow: var(--ombre-carte);
+}
+
+main h2 {
+    color: var(--couleur-primaire);
+    border-bottom: 2px solid var(--couleur-bordure);
+    padding-bottom: var(--espacement-petit);
+}
+
+main p {
+    line-height: 1.6;
+}
+
+main strong {
+    color: var(--couleur-primaire);
+}
+
+/* Formulaire */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacement-moyen);
+}
+
+input[type="file"] {
+    padding: var(--espacement-petit);
+    border: 1px solid var(--couleur-bordure-input);
+    border-radius: var(--rayon-bordure);
+}
+
+button {
+    background-color: var(--couleur-primaire);
+    color: var(--couleur-blanc);
+    border: none;
+    padding: 0.75rem var(--espacement-grand);
+    border-radius: var(--rayon-bordure);
+    cursor: pointer;
+    font-size: 1rem;
+    width: fit-content;
+}
+
+button:hover {
+    background-color: var(--couleur-primaire-hover);
+}
+
+/* Liste de mots-clés */
+ul {
+    padding-left: var(--espacement-grand);
+}
+
+/* Texte brut extrait */
+pre {
+    background-color: var(--couleur-fond);
+    padding: var(--espacement-moyen);
+    border-radius: var(--rayon-bordure);
+    overflow-x: auto;
+    white-space: pre-wrap;
+    font-size: var(--taille-texte-pre);
+}
+
+/* Footer */
+footer {
+    max-width: var(--largeur-max-contenu);
+    margin: var(--espacement-tres-grand) auto;
+    padding: var(--espacement-moyen) var(--espacement-tres-grand);
+    text-align: center;
+}
+
+footer a {
+    color: var(--couleur-primaire);
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
